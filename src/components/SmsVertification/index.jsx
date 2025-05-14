@@ -89,7 +89,7 @@ const ConfirmationCode = () => {
 
     try {
       const response = await fetch(
-        'https://xisobchiai2.admob.uz/api/v1/opt/' +
+        'https://bot.admob.uz/api/v1/opt/' +
           localStorage.getItem('obunaPay'),
         {
           method: 'POST',
