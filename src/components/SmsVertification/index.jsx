@@ -201,7 +201,13 @@ const ConfirmationCode = () => {
       {!showResend ? (
         <button className="button">{formatTime(timeLeft)}</button>
       ) : (
-        <button onClick={resendCode} className="button">
+        <button
+          onClick={() => {
+            resendCode();
+            setCode('');
+          }}
+          className="button"
+        >
           Qayta kodni olish
         </button>
       )}
