@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Input, message, notification } from 'antd';
 import '../CardData/ObunaPay.css';
 import logo from '../../assets/hisobchi.svg';
