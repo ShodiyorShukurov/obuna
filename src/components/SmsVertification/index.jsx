@@ -70,7 +70,7 @@ const ConfirmationCode = () => {
       MainButton.hideProgress();
       MainButton.enable();
     }
-    setTimeLeft(120);
+    setTimeLeft(60);
     setShowResend(false);
   };
 
@@ -167,24 +167,30 @@ const ConfirmationCode = () => {
 
       <form>
         <Input.OTP
-          className="custom-otp-input"
-          formatter={(str) => str.toUpperCase()}
           value={code}
-          onChange={(val) => setCode(val)}
+          onChange={setCode}
           inputMode="numeric"
+          formatter={(s) => s.toUpperCase()}
           onPaste={(e) => {
             e.preventDefault();
+
+            // Paste qilingan kodni olish
             const pasted = e.clipboardData
               .getData('Text')
               .replace(/\D/g, '')
               .slice(0, 6);
+
+            // Set to state (all 6 digits at once)
             setCode(pasted);
 
-            // Paste'dan keyin focus holatini olib tashlash
+            // iOS/Android paste bug fix: remove focus/selection
             setTimeout(() => {
-              document.activeElement?.blur(); // inputdan chiqish
+              if (document.activeElement instanceof HTMLElement) {
+                document.activeElement.blur(); // inputdan chiqib ketadi
+              }
             }, 50);
           }}
+          className="custom-otp-input"
         />
       </form>
 
