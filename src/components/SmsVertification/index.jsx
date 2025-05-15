@@ -150,6 +150,8 @@ const ConfirmationCode = () => {
     }
   }, [code]);
 
+  const inputRef = useRef(null); // Inputga referens
+
   const handlePaste = (e) => {
     e.preventDefault();
     const pasted = e.clipboardData
@@ -157,6 +159,14 @@ const ConfirmationCode = () => {
       .replace(/\D/g, '')
       .slice(0, 6);
     setCode(pasted);
+
+    // Tanlashni olib tashlash va kursor pozitsiyasini oxiriga qo'yish
+    setTimeout(() => {
+      if (inputRef.current) {
+        const input = inputRef.current.input;
+        input.setSelectionRange(pasted.length, pasted.length); // Kursor oxiriga o'tadi
+      }
+    }, 0);
   };
 
   return (
@@ -176,8 +186,11 @@ const ConfirmationCode = () => {
 
       <form>
         <Input.OTP
+          ref={inputRef}
           value={code}
-          onChange={(e) => setCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
+          onChange={(e) =>
+            setCode(e.target.value.replace(/\D/g, '').slice(0, 6))
+          }
           inputMode="numeric"
           formatter={(s) => s.toUpperCase()}
           onPaste={handlePaste}
