@@ -150,6 +150,15 @@ const ConfirmationCode = () => {
     }
   }, [code]);
 
+  const handlePaste = (e) => {
+    e.preventDefault();
+    const pasted = e.clipboardData
+      .getData('Text')
+      .replace(/\D/g, '')
+      .slice(0, 6);
+    setCode(pasted);
+  };
+
   return (
     <div className="container">
       <div className="padding sms">
@@ -168,29 +177,12 @@ const ConfirmationCode = () => {
       <form>
         <Input.OTP
           value={code}
-          onChange={setCode}
+          onChange={(e) => setCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
           inputMode="numeric"
           formatter={(s) => s.toUpperCase()}
-          onPaste={(e) => {
-            e.preventDefault();
-
-            // Paste qilingan kodni olish
-            const pasted = e.clipboardData
-              .getData('Text')
-              .replace(/\D/g, '')
-              .slice(0, 6);
-
-            // Set to state (all 6 digits at once)
-            setCode(pasted);
-
-            // iOS/Android paste bug fix: remove focus/selection
-            setTimeout(() => {
-              if (document.activeElement instanceof HTMLElement) {
-                document.activeElement.blur(); // inputdan chiqib ketadi
-              }
-            }, 50);
-          }}
+          onPaste={handlePaste}
           className="custom-otp-input"
+          style={{ fontSize: '16px' }}
         />
       </form>
 
