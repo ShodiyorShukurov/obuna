@@ -114,6 +114,24 @@ const ObunaPay = () => {
     }
   }, []);
 
+
+  const handleCardPaste = (e) => {
+  e.preventDefault();
+  const pasted = e.clipboardData.getData('Text');
+  const digitsOnly = pasted.replace(/\D/g, ''); // Faqat raqamlar
+  const formatted = digitsOnly
+    .slice(0, 16)
+    .replace(/(\d{4})(?=\d)/g, '$1 ')
+    .trim();
+
+  // Inputga qiymatni qo‘lda o‘rnatish
+  const input = e.target;
+  input.value = formatted;
+
+  // Agar siz controlled component ishlatayotgan bo‘lsangiz:
+  // setCardNumber(formatted);
+};
+
   return (
     <div className="container">
       <div className="form-section">
@@ -147,6 +165,7 @@ const ObunaPay = () => {
             placeholder="0000 0000 0000 0000"
             required
             inputMode="numeric"
+            onPaste={handleCardPaste}
           />
           <MaskedInput
             mask={[/\d/, /\d/, '/', /\d/, /\d/]}

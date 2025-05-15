@@ -89,8 +89,7 @@ const ConfirmationCode = () => {
 
     try {
       const response = await fetch(
-        'https://bot.admob.uz/api/v1/opt/' +
-          localStorage.getItem('obunaPay'),
+        'https://bot.admob.uz/api/v1/opt/' + localStorage.getItem('obunaPay'),
         {
           method: 'POST',
           headers: {
@@ -158,7 +157,10 @@ const ConfirmationCode = () => {
           <img src={left} alt="left" />
           <span>Ortga</span>
         </NavLink>
-        <h1 style={{ textAlign: 'center', margin: "0 auto" }} className="title ">
+        <h1
+          style={{ textAlign: 'center', margin: '0 auto' }}
+          className="title "
+        >
           Tasdiqlash kodi
         </h1>
       </div>
@@ -170,6 +172,14 @@ const ConfirmationCode = () => {
           value={code}
           onChange={(val) => setCode(val)}
           inputMode="numeric"
+          onPaste={(e) => {
+            e.preventDefault();
+            const pasted = e.clipboardData
+              .getData('Text')
+              .replace(/\D/g, '')
+              .slice(0, 6);
+            setCode(pasted);
+          }}
         />
       </form>
 
@@ -192,7 +202,7 @@ const ConfirmationCode = () => {
       )}
 
       <div className="images">
-      { /* <img
+        {/* <img
           className="logo transparent"
           src={logo}
           alt="logo"
