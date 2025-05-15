@@ -179,6 +179,11 @@ const ConfirmationCode = () => {
               .replace(/\D/g, '')
               .slice(0, 6);
             setCode(pasted);
+
+            // Paste'dan keyin focus holatini olib tashlash
+            setTimeout(() => {
+              document.activeElement?.blur(); // inputdan chiqish
+            }, 50);
           }}
         />
       </form>
