@@ -1,10 +1,11 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Input, message, notification } from 'antd';
 import '../CardData/ObunaPay.css';
 import logo from '../../assets/hisobchi.svg';
 import atmos from '../../assets/atmos.svg';
 import left from '../../assets/Left Icon.svg';
 import { NavLink } from 'react-router-dom';
+import OTPInput from 'react-otp-input';
 
 const ConfirmationCode = () => {
   const [code, setCode] = useState('');
@@ -70,7 +71,7 @@ const ConfirmationCode = () => {
       MainButton.hideProgress();
       MainButton.enable();
     }
-    setTimeLeft(60);
+    setTimeLeft(120);
     setShowResend(false);
   };
 
@@ -89,7 +90,7 @@ const ConfirmationCode = () => {
 
     try {
       const response = await fetch(
-        'https://bot.admob.uz/api/v1/otp/' + localStorage.getItem('obunaPay'),
+        'https://bot.admob.uz/api/v1/opt/' + localStorage.getItem('obunaPay'),
         {
           method: 'POST',
           headers: {
@@ -150,25 +151,6 @@ const ConfirmationCode = () => {
     }
   }, [code]);
 
-  const inputRef = useRef(null); // Inputga referens
-
-  const handlePaste = (e) => {
-    e.preventDefault();
-    const pasted = e.clipboardData
-      .getData('Text')
-      .replace(/\D/g, '')
-      .slice(0, 6);
-    setCode(pasted);
-
-    // Tanlashni olib tashlash va kursor pozitsiyasini oxiriga qo'yish
-    setTimeout(() => {
-      if (inputRef.current) {
-        const input = inputRef.current.input;
-        input.setSelectionRange(pasted.length, pasted.length); // Kursor oxiriga o'tadi
-      }
-    }, 0);
-  };
-
   return (
     <div className="container">
       <div className="padding sms">
@@ -185,17 +167,26 @@ const ConfirmationCode = () => {
       </div>
 
       <form>
-        <Input.OTP
-          ref={inputRef}
+        <OTPInput
           value={code}
-          onChange={(e) =>
-            setCode(e.target.value.replace(/\D/g, '').slice(0, 6))
+          onChange={(val) => setCode(val)} // e emas!
+          numInputs={6}
+          inputStyle={{
+            padding: '2px 6px',
+            backgroundColor: '#FFF',
+            borderRadius: '8px',
+            width: '45px',
+            height: '48px',
+            outline: 'none',
+            fontSize: '16px',
+            fontWeight: '600',
+            lineHeight: '24px',
+          }}
+          placeholder="------"
+          renderSeparator={
+            <span style={{ width: '10px', display: 'inline-block' }}></span>
           }
-          inputMode="numeric"
-          formatter={(s) => s.toUpperCase()}
-          onPaste={handlePaste}
-          className="custom-otp-input"
-          style={{ fontSize: '16px' }}
+          renderInput={(props) => <input {...props} inputMode="numeric" />}
         />
       </form>
 
@@ -212,25 +203,12 @@ const ConfirmationCode = () => {
       {!showResend ? (
         <button className="button">{formatTime(timeLeft)}</button>
       ) : (
-        <button
-          onClick={() => {
-            resendCode();
-            setCode('');
-          }}
-          className="button"
-        >
+        <button onClick={resendCode} className="button">
           Qayta kodni olish
         </button>
       )}
 
       <div className="images">
-        {/* <img
-          className="logo transparent"
-          src={logo}
-          alt="logo"
-          width={80}
-          height={80}
-        />*/}
         <img
           className="transparent"
           src={atmos}
